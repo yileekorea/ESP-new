@@ -7,13 +7,9 @@
 #include "gpio_MCP23S17.h"
 #include <SPI.h>//this chip needs SPI
 
-
-
 gpio_MCP23S17::gpio_MCP23S17(){
 
 }
-
-
 
 //return 255 if the choosed pin has no INT, otherwise return INT number
 //if there's support for SPI transactions it will use SPI.usingInterrupt(intNum);
@@ -25,7 +21,7 @@ gpio_MCP23S17::gpio_MCP23S17(){
   } else {
     Serial.println("sorry, pin has no INT capabilities!");
   }
- */
+*/
 
 int gpio_MCP23S17::getInterruptNumber(byte pin) {
 	int intNum = digitalPinToInterrupt(pin);
@@ -37,10 +33,6 @@ int gpio_MCP23S17::getInterruptNumber(byte pin) {
 	}
 	return 255;
 }
-
-
-
-
 
 gpio_MCP23S17::gpio_MCP23S17(const uint8_t csPin,const uint8_t haenAdrs){
 	postSetup(csPin,haenAdrs);
@@ -266,5 +258,3 @@ void gpio_MCP23S17::DEBUG_MCP(Generic text) {
     Serial.println(text);
   }
 }
-
-
