@@ -38,15 +38,11 @@
 unsigned long tempTry = 1;
 int numSensor = 0;
 
-
-
-
 // -------------------------------------------------------------------
 // SETUP
 // -------------------------------------------------------------------
 void setup() {
   LED_setup(0.2);
-
   delay(1000);
 
   Serial.begin(115200);
@@ -79,7 +75,7 @@ void setup() {
   mcp_GPIO_setup();
   
   delay(100);
-  DEBUG.println("Loop start");
+  DEBUG.println("Main Loop will start from below lines...");
 } // end setup
 
 // -------------------------------------------------------------------
