@@ -1,0 +1,51 @@
+/*
+ * -------------------------------------------------------------------
+ * EmonESP Serial to Emoncms gateway
+ * -------------------------------------------------------------------
+ * Adaptation of Chris Howells OpenEVSE ESP Wifi
+ * by Trystan Lea, Glyn Hudson, OpenEnergyMonitor
+ * All adaptation GNU General Public License as below.
+ *
+ * -------------------------------------------------------------------
+ *
+ * This file is part of OpenEnergyMonitor.org project.
+ * EmonESP is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ * EmonESP is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with EmonESP; see the file COPYING.  If not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#ifndef _EMONESP_OUTPUT_H
+#define _EMONESP_OUTPUT_H
+
+#include <Arduino.h>
+#include <Ticker.h>
+
+// -------------------------------------------------------------------
+// Support for reading input
+// -------------------------------------------------------------------
+
+
+
+// -------------------------------------------------------------------
+// Read input sent via the web_server or serial.
+//
+// data: if true is returned data will be updated with the new line of
+//       input
+// -------------------------------------------------------------------
+extern void tick();
+extern void LED_setup(float t);
+extern void LED_clear();
+
+extern void relayControl();
+extern void mcp_GPIO_setup();
+
+#endif // _EMONESP_INPUT_H
