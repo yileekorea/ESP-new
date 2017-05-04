@@ -35,8 +35,11 @@
 #include "emoncms.h"
 #include "mqtt.h"
 
+
+
 unsigned long tempTry = 1;
 int numSensor = 0;
+
 
 
 
@@ -71,14 +74,16 @@ void setup() {
 
   // Start the OTA update systems
   ota_setup();
-  
+
   if (wifi_mode==WIFI_MODE_STA){
 	verifyFingerprint();
   }
-  
+
   mcp_GPIO_setup();
-  
+
   delay(100);
+
+
   DEBUG.println("Loop start");
 } // end setup
 
@@ -87,7 +92,7 @@ void setup() {
 // -------------------------------------------------------------------
 void loop()
 {
-	
+
   ota_loop();
   web_server_loop();
   wifi_loop();
@@ -105,10 +110,10 @@ void loop()
 			if(readFromOneWire()) {
 				sendTempData();
 				relayControl();
+        DEBUG.println("Firmware: "+ currentfirmware);
 			}
 			tempTry = millis();
 		}
 	}
   }
 } // end loop
-
