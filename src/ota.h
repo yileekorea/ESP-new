@@ -34,6 +34,7 @@
 
 #include <Arduino.h>
 #include <ESP8266httpUpdate.h>
+#include <Ticker.h>
 
 extern const char* updateServer;
 extern const char* fwImage;
