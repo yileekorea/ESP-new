@@ -23,6 +23,6 @@ deploy:
   - ".pioenvs/io2life_deploy/spiffs.bin"
   on:
     repo: yileekorea/ESP-new
-    tags: true
+    #tags: true
     all_branches: true
     condition: $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$
