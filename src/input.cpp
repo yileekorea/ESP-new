@@ -28,6 +28,7 @@
 
 #include "OneWire.h"
 
+
 OneWire  ds(2);  // on pin 2 (a 4.7K resistor is necessary)
 
 String sName[]= {"a","b","c","d","e","f","g","h","i","j"};
