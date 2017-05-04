@@ -35,6 +35,7 @@
 #include <FS.h>
 
 ESP8266HTTPUpdateServer httpUpdater;  // Create class for webupdate handleWebUpdate()
+#define CHECK_INTERVAL 60
 
 
 // -------------------------------------------------------------------
@@ -46,13 +47,20 @@ ESP8266HTTPUpdateServer httpUpdater;  // Create class for webupdate handleWebUpd
 String updateServer_fwImage;
 
 const char* updateServer = "http://iot2better.iptime.org:8003/fwImage/";
-const char* fwImage = "io2life.bin";
+const char* fwImage = "firmware.bin";
 
-const char* u_host = "217.9.195.227";
-const char* u_url = "/esp/firmware.php";
+const char* u_host = "http://iot2better.iptime.org:9000";
+const char* u_url = "/firmware.php";
 const char* firmware_update_path = "/upload";
 
 extern const char *esp_hostname;
+
+Ticker updateCheck;
+boolean doUpdateCheck = true;
+
+void enableUpdateCheck() {
+  doUpdateCheck = true;
+}
 
 void ota_setup()
 {
@@ -62,11 +70,20 @@ void ota_setup()
 
   // Setup firmware upload
   httpUpdater.setup(&server, firmware_update_path);
+
+  updateCheck.attach(CHECK_INTERVAL, enableUpdateCheck);
+
 }
 
 void ota_loop()
 {
   ArduinoOTA.handle();
+  int flashButtonState = digitalRead(0);
+  if (flashButtonState == LOW || doUpdateCheck) {
+    Serial.println("Going to update firmware...");
+    ota_http_update();
+    doUpdateCheck = false;
+  }
 }
 
 String ota_get_latest_version()
@@ -79,11 +96,34 @@ String ota_get_latest_version()
 t_httpUpdate_return ota_http_update()
 {
   SPIFFS.end(); // unmount filesystem
-  t_httpUpdate_return ret = ESPhttpUpdate.update("http://" + String(u_host) + String(u_url) + "?tag=" + currentfirmware);
+  Serial.println("WILL start ESP update");
+  //t_httpUpdate_return ret = ESPhttpUpdate.update("http://" + String(u_host) + String(u_url) + "?tag=" + currentfirmware);
+  t_httpUpdate_return ret = ESPhttpUpdate.update("http://iot2better.iptime.org:9000/firmware.php?tag=" + currentfirmware);
+
   SPIFFS.begin(); //mount-file system
+
+  switch(ret) {
+    case HTTP_UPDATE_FAILED:
+        Serial.printf("HTTP_UPDATE_FAILD Error (%d): %s", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
+        break;
+
+    case HTTP_UPDATE_NO_UPDATES:
+        Serial.println("HTTP_UPDATE_NO_UPDATES");
+        break;
+
+    case HTTP_UPDATE_OK:
+        Serial.println("HTTP_UPDATE_OK");
+          Serial.println("WILL reboot ESP system soon!!!!");
+          pinMode(0, OUTPUT);
+          digitalWrite(0, HIGH);
+          delay(5000);
+          ESP.reset();
+        break;
+}
+
   return ret;
 }
-void do_reboot_exe() 
+void do_reboot_exe()
 {
 	Serial.println("WILL reboot ESP system soon!!!!");
 	pinMode(0, OUTPUT);
@@ -97,7 +137,7 @@ void io2LIFEhttpUpdate(const char* updateServer, const char* fwImage)
   if (WiFi.status() == WL_CONNECTED) {
         updateServer_fwImage = updateServer;
         updateServer_fwImage += fwImage;
-		
+
 		String REMOTE_SERVER = updateServer;
 		String SKETCH_BIN = fwImage;
 
